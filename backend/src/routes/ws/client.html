@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket Client</title>
+</head>
+<body>
+  <h1>WebSocket Client</h1>
+  <script>
+    // Connect to the WebSocket server
+    const socket = new WebSocket('ws://localhost:8080');
+
+    // When the connection is open, send a message
+    socket.addEventListener('open', function (event) {
+      console.log('Connected to the WebSocket server');
+      socket.send('Hello, Server!');
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+      console.log('Message from server: ', event.data);
+    });
+
+    // Handle errors
+    socket.addEventListener('error', function (event) {
+      console.error('WebSocket error:', event);
+    });
+
+    // Handle connection close
+    socket.addEventListener('close', function (event) {
+      console.log('WebSocket connection closed');
+    });
+  </script>
+</body>
+</html>
