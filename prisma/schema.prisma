@@ -14,11 +14,19 @@ datasource db {
 }
 
 model User {
-  id                String      @id @default(uuid())
-  email             String      @unique
+  id                String   @id @default(uuid())
+  email             String   @unique
   passwordHash      String
-  isVerified        Boolean     @default(false)
+  isVerified        Boolean  @default(false)
   verificationToken String?
   tokenExpiry       DateTime?
-  createdAt         DateTime    @default(now())
+  createdAt         DateTime @default(now())
+  role              Role     @default(USER)
 }
+
+enum Role {
+  ADMIN
+  MODERATOR
+  USER
+}
+
