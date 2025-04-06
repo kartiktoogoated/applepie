@@ -3,11 +3,21 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { upload } from '../../utils/upload';
 
 dotenv.config();
 const authtuahRouter = Router();
 const prisma = new PrismaClient();
 const SECRET = process.env.JWT_SECRET || 'SECRET';
+
+// POST /users/upload - Endpoint to upload a file
+ authtuahRouter.post('/upload', upload.single('avatar'), (req: Request, res:Response) => {
+    if (!req.file) {
+        res.status(400).json({ error: 'No file uploaded' });
+        return;
+    }
+    res.status(201).json({ message: 'File uploaded successfully', file: req.file });
+ });
 
 //Register
 authtuahRouter.post('/register', async (req:Request, res:Response): Promise<void> => {
@@ -35,7 +45,8 @@ authtuahRouter.post('/login', async (req:Request, res:Response): Promise<void> =
     });
 
     if(!user || !(await bcrypt.compare(password, user.passwordHash))){
-        return res.status(401).json({ error: 'Invalid Credentials' });
+        res.status(401).json({ error: 'Invalid Credentials' });
+        return;
     }
 
     const token = jwt.sign({ id:user.id, email:user.email }, SECRET, { expiresIn: '1h'});
