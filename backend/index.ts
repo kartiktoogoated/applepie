@@ -1,7 +1,6 @@
 import "reflect-metadata"; // Ensure this is imported at the very top
 import { initDB } from "./src/db";
 
-
 const ws = new WebSocket("ws://localhost:3001");
 
 ws.onopen = () => {
@@ -19,11 +18,14 @@ ws.onclose = () => console.log("Disconnected from server");
 import express from "express";
 import { initKafka } from "./utils/kafka"; // Adjust import path as needed
 import { errorHandler } from "./src/middleware/errorHandler";
+import productRoutes from "./src/routes/paige/productRoutes";
 
 const app = express();
 const PORT = 3003;
 
 app.use(errorHandler) // Global handler
+
+app.use('/api', productRoutes)
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
